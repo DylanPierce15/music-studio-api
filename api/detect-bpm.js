@@ -1,4 +1,5 @@
 import MusicTempo from 'music-tempo'
+import audioDecode from 'audio-decode'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -12,10 +13,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Fetch the audio file from R2
+    // Fetch the audio file
     const response = await fetch(audioUrl)
-    const buffer = await response.arrayBuffer()
-    const audioData = new Float32Array(buffer)
+    const arrayBuffer = await response.arrayBuffer()
+
+    // Decode MP3 into raw audio samples
+    const audioBuffer = await audioDecode(arrayBuffer)
+
+    // Get the first channel's float32 data
+    const audioData = audioBuffer.getChannelData(0)
 
     const mt = new MusicTempo(audioData)
 
