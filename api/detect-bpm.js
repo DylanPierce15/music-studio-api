@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
     res.json({
       bpm: Math.round(mt.tempo),
-      confidence: mt.beats.length,
+      beatsDetected: mt.beats.length,
     })
   } catch (e) {
     res.status(500).json({ error: 'BPM detection failed', detail: e.message })
